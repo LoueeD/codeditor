@@ -3,8 +3,83 @@
   <head>
     <meta charset="utf-8">
     <title>Codeeditor</title>
+    <script src="https://unpkg.com/vue@3"></script>
+    <style>
+    body {
+      margin: 0;
+    }
+    .app {
+      font-family: Avenir, Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .question {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .answers .block {
+      padding: 12px;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+
+    .answers .block:hover {
+      background: rgba(0, 0, 0, 0.05);
+      cursor: pointer;
+    }
+    </style>
   </head>
   <body>
-    <h1>Testing</h1>
+    <div id="app">
+      <div class="app">
+        <template v-if="activeQuiz">
+          <div class="question">
+            {{ activeQuiz.title }}
+          </div>
+          <div class="answers">
+            <div class="block" v-for="answer in activeQuiz.answers">
+              <div class="value">{{ answer.value }}</div>
+            </div>
+          </div>
+        </template>
+      </div>
+    </div>
+    <script>
+      const { createApp } = Vue
+
+      createApp({
+        data() {
+          return {
+            quizzes: [
+              {
+                id: 'position',
+                title:
+                  'Which position value should we use to maybe a header/nav stay at the top of a page?',
+                answers: [
+                  { value: 'Static', seletced: false, correct: false },
+                  { value: 'Relative', seletced: false, correct: false },
+                  { value: 'Absolute', seletced: false, correct: false },
+                  { value: 'Fixed', seletced: false, correct: true },
+                  { value: 'Sticky', seletced: false, correct: true },
+                ],
+              },
+            ],
+          };
+        },
+        computed: {
+          activeQuiz() {
+            const id = new URL(location.href).search.replace('?', '') || 'position';
+            return this.quizzes.find((q) => q.id === id);
+          },
+        },
+      }).mount('#app');
+    </script>
   </body>
 </html>
